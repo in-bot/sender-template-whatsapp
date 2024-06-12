@@ -1,20 +1,7 @@
 const { createClient } = require("redis");
 const util = require("../../root/controllers/util");
-const template = require("../services/smarters.template.service")
-const config = require("../../../config/default.json")
+const template = require("./template.service")
 const url_redis = "redis://inbot-vpc.ph02sx.0001.use1.cache.amazonaws.com:6379";
-
-async function enqueueAndPublish(queueName, item) {
-    const client = await createClient({ url: url_redis })
-        .on('error', err => console.log('Redis Client Error', err))
-        .connect();
-    const rpush = await client.rPush(queueName, JSON.stringify(item))
-
-    console.log('Item adicionado à fila:', item);
-    console.log(new Date(), `RPUSH: ${JSON.stringify(rpush)}`)
-    client.quit();
-}
-
 
 // Função para processar um item da fila
 async function processQueue(queueName) {
@@ -46,7 +33,7 @@ async function processQueue(queueName) {
                     console.error('Erro ao enviar template:', error);
                 }
             }
-            await util.sleep(10);
+            await util.sleep(1);
         }
     } catch (error) {
         console.error('Erro ao conectar ao cliente Redis:', error);
@@ -54,6 +41,5 @@ async function processQueue(queueName) {
 }
 
 module.exports = {
-    processQueue,
-    enqueueAndPublish,
+    processQueue
 }

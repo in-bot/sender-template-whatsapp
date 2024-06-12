@@ -4,7 +4,8 @@
   "description": "Envio de template para whatsapp, olhando pela fila redis",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/server.js"
   },
   "keywords": [],
   "author": "Eduardo Augusto Gomes de Oliveira",
@@ -16,6 +17,12 @@
     "redis": "^4.6.14"
   },
   "devDependencies": {
-    "nodemon": "^3.1.3"
+    "@eslint/js": "^9.4.0",
+    "eslint": "^9.4.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "globals": "^15.4.0",
+    "nodemon": "^3.1.3",
+    "prettier": "^3.3.2"
   }
 }

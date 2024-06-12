@@ -1,7 +1,6 @@
 require('dotenv').config();
 const process = require('process');
-
-// const envConf = require("../../../config");
+const { createHash } = require('node:crypto');
 
 const dateAddMinute = function (date, minute) {
     return new Date(date.getTime() + (minute * 60000));
@@ -69,7 +68,7 @@ async function retryAsyncFunction(operation_name, operation, num_retries = 2, de
         } catch (error) {
             console.log("%s: %s(retry %d): Error: %O", new Date, operation_name, retries, error);
             retries++;
-            await util.sleep(delay);
+            await sleep(delay);
         }
     }
 }
@@ -92,8 +91,6 @@ const padLeft = function (val, size, str) {
 
     return (strPad + val).substr((strPad + val).length - size, size);
 }
-
-const today = (new Date()).getFullYear() + "-" + padLeft(((new Date()).getMonth() + 1), 2, '0') + "-" + padLeft(((new Date()).getDate()).toString(), 2, "0");
 
 const sortJSON = function (data, key, way) {
     return data.sort(function (a, b) {
@@ -157,6 +154,75 @@ const killContainer = function () {
     })
 }
 
+function isEmptyObject(obj) {
+  for (let prop in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, prop)) return false;
+  }
+  return true;
+}
+
+const isHasOwnProperty = (o, i) => {
+  return !isEmptyObject(o) && Object.prototype.hasOwnProperty.call(o, i);
+};
+
+function sessionGenerator(maxLen) {
+  return createHash("sha3-256")
+    .update(Date())
+    .digest("hex")
+    .substring(0, maxLen);
+}
+
+function parseLimitCharacter(v, maxLength) {
+  return v.length > maxLength ? v.slice(0, maxLength) : v;
+}
+
+function separarBlocos(texto, index = 0, blocos = [], firstCall = true) {
+  const regex = /\[(?:block|bloco)(?:\s+delay=([\d.]+))?\]/g;
+
+  // Adiciona o texto antes do primeiro bloco na primeira chamada.
+  if (firstCall) {
+    const firstMatchIndex = texto.search(regex);
+
+    // Se a busca não encontrar blocos, adiciona o texto inteiro como um bloco sem delay.
+    if (firstMatchIndex === -1) {
+      return [
+        {
+          bloco: texto,
+          delay: null
+        }
+      ];
+    }
+
+    if (firstMatchIndex > 0) {
+      blocos.push({
+        bloco: texto.slice(0, firstMatchIndex),
+        delay: null
+      });
+    }
+  }
+
+  // Define a posição inicial para a busca regex.
+  regex.lastIndex = index;
+
+  const match = regex.exec(texto);
+  if (match === null) {
+    return blocos;
+  }
+
+  const inicio = match.index + match[0].length;
+  const delay = match[1] ? parseFloat(match[1]) : null;
+  const proximoMatch = regex.exec(texto);
+  const fim = proximoMatch ? proximoMatch.index : texto.length;
+
+  // Adiciona o bloco e o valor de delay (se disponível) à lista de blocos.
+  blocos.push({
+    bloco: texto.slice(inicio, fim),
+    delay: delay
+  });
+
+  return separarBlocos(texto, fim, blocos, false);
+};
+
 module.exports = {
     padRight,
     padLeft,
@@ -172,5 +238,9 @@ module.exports = {
     stringToDate,
     sleep,
     retryAsyncFunction,
-    killContainer
+    killContainer,
+    sessionGenerator,
+    parseLimitCharacter,
+    separarBlocos,
+    isHasOwnProperty
 };
