@@ -4,15 +4,6 @@ const whatsIn = require("./whatsAppInteraction");
 const utils = require("./util");
 const { Exception } = require("handlebars");
 
-function isEmptyObject(obj) {
-  for (let prop in obj) {
-    if (obj.hasOwnProperty(prop)) return false;
-  }
-  return true;
-}
-function isHasOwnProperty(o, i) {
-  return !isEmptyObject(o) && Object.prototype.hasOwnProperty.call(o, i);
-}
 const sendTemplate = async function (botId, templateId, senderPhone, dataClient, payloads, campaignId) {
   // Pegando dados do remetente
   let vSQL =
@@ -35,7 +26,7 @@ const sendTemplate = async function (botId, templateId, senderPhone, dataClient,
       }
     }
     try {
-      if (!isHasOwnProperty(dbInbot[0], "accessToken")) {
+      if (!utils.isHasOwnProperty(dbInbot[0], "accessToken")) {
         throw new Exception("Parametros invalidos");
       }
       console.log(dataValues)
@@ -73,7 +64,7 @@ const sendTemplate = async function (botId, templateId, senderPhone, dataClient,
           )
         }
       }
-      if (isHasOwnProperty(dataClient[j], "variables")) {
+      if (utils.isHasOwnProperty(dataClient[j], "variables")) {
         let parameters = [];
         dataClient[j].variables.map((v) => parameters.push({ type: "text", text: v }));
         if (parameters.length > 0) {
@@ -121,7 +112,7 @@ const sendTemplate = async function (botId, templateId, senderPhone, dataClient,
         axios.get(`https://in.bot/api/bot_gateway?bot_id=${botId}&user_id=${dataClient[j].receiverPhone}&session_id=${sessionId}&bot_token=${dbInbot[0].botToken}&user_phrase=ATIVO_WHATSAPP ${templateId}&json=1&bot_server_type=${dbInbot[0].botServerType}&channel=whatsapp${dataValues}`)
           .then(resp => console.log(resp.data))
       } catch (error) {
-        //console.log(error)
+        console.log(error)
       }
       let currentDate = new Date().toISOString();
       console.log("%s payload envio do template whats: %o", new Date(), body_params);
@@ -156,7 +147,8 @@ const sendTemplate = async function (botId, templateId, senderPhone, dataClient,
           }
         });
     } catch (error) {
-      console.log("%s response ERROR apos envio do template whats: %o", new Date(), err.response.data)
+      let currentDate = new Date().toISOString();
+      console.log("%s response ERROR apos envio do template whats: %o", new Date(), error)
       if (campaignId) {
         let vSQL =
         "UPDATE templateTriggeringCustomer SET status='erro', data_disparo= '" +

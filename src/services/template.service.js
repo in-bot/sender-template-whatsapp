@@ -163,7 +163,7 @@ const sendTemplate = async function (botId, templateId, senderPhone, dataClient,
         });
     } catch (error) {
         let currentDate = new Date().toISOString();
-      console.log("%s response ERROR apos envio do template whats: %o", new Date(), error.response.data)
+      console.log("%s response ERROR apos envio do template whats: %o", new Date(), error)
       if (campaignId) {
         let vSQL =
         "UPDATE templateTriggeringCustomer SET status='erro', data_disparo= '" +
