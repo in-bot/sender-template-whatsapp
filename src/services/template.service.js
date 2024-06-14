@@ -114,7 +114,7 @@ const sendTemplate = async function (botId, templateId, senderPhone, dataClient,
         const escalation = 0;
         await WhatsAppInteractionRepository.createNewSession(senderPhone, dataClient[j].receiverPhone, botId, sessionId, escalation, lastMessage, "")
           .catch(error => console.log(new Date(), `Erro ao criado usuario ${JSON.stringify(error)}`))
-        customer = await this.getByBotPhoneBotIdUserPhone(botId,dataClient[j].receiverPhone,senderPhone)
+        customer = await WhatsAppInteractionRepository.getByBotPhoneBotIdUserPhone(botId,dataClient[j].receiverPhone,senderPhone)
         customer = customer[0];
       } else {
         await WhatsAppInteractionRepository.updateCustomer(botId,dataClient[j].receiverPhone,senderPhone,lastMessage,"",customer.sessionId);

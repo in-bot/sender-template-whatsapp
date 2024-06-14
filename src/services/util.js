@@ -166,10 +166,10 @@ const isHasOwnProperty = (o, i) => {
 };
 
 function sessionGenerator(maxLen) {
-  return createHash("sha3-256")
-    .update(Date())
-    .digest("hex")
-    .substring(0, maxLen);
+    const now = new Date().toISOString();
+    const randomValue = Math.random().toString();
+    const dataToHash = now + randomValue;
+    return crypto.createHash('sha3-256').update(dataToHash).digest('hex').substring(0, maxLen);
 }
 
 function parseLimitCharacter(v, maxLength) {
