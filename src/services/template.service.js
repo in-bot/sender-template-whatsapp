@@ -1,5 +1,5 @@
 const axios = require("axios");
-const inbotDB = require("./inbot/services/inbot.db.service");
+const inbotDB = require("./inbot.db.service");
 const util = require("./util");
 const { Exception } = require("handlebars");
 const WhatsAppInteractionRepository = require("../repository/WhatsAppInteractionRepository");

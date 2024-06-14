@@ -1,5 +1,4 @@
 const mysql = require('mysql2');
-const config = require("config");
 const util = require("./util");
 const dbDataConnect = {
     host: process.env.DB_HOST_WHATS,
@@ -53,10 +52,6 @@ function execute(sql) {
 }
 
 function logFail(message, error, kill) {
-  logAction.function = "error to get connection";
-  logAction.message = error;
-  logger.log(logAction);
-
   if (kill)
     util.killContainer();
 }

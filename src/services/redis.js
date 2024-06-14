@@ -1,6 +1,7 @@
 const { createClient } = require("redis");
-const util = require("../../root/controllers/util");
+const util = require("./util");
 const template = require("./template.service")
+// const url_redis = "redis://127.0.0.1:6379";
 const url_redis = "redis://inbot-vpc.ph02sx.0001.use1.cache.amazonaws.com:6379";
 
 // Função para processar um item da fila
