@@ -1,6 +1,6 @@
 require('dotenv').config();
 const process = require('process');
-const { createHash } = require('node:crypto');
+const crypto = require('node:crypto');
 
 const dateAddMinute = function (date, minute) {
     return new Date(date.getTime() + (minute * 60000));
