@@ -118,6 +118,7 @@ const sendTemplate = async function (botId, templateId, senderPhone, dataClient,
         customer = customer[0];
       } else {
         await WhatsAppInteractionRepository.updateCustomer(botId,dataClient[j].receiverPhone,senderPhone,lastMessage,"",customer.sessionId);
+        sessionId = customer.sessionId;
       }
 
       console.log(new Date(), `https://in.bot/api/bot_gateway?bot_id=${botId}&user_id=${dataClient[j].receiverPhone}&session_id=${sessionId}&bot_token=${dbInbot[0].botToken}&user_phrase=ATIVO_WHATSAPP ${templateId}&json=1&bot_server_type=${dbInbot[0].botServerType}&channel=whatsapp${dataValues}`);
