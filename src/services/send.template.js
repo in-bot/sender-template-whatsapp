@@ -1,6 +1,5 @@
 const axios = require("axios");
 const inbotDB = require("./inbot.db.service");
-const whatsIn = require("./whatsAppInteraction");
 const utils = require("./util");
 const { Exception } = require("handlebars");
 
@@ -91,29 +90,6 @@ const sendTemplate = async function (botId, templateId, senderPhone, dataClient,
         }
       }
 
-      // Checando o controlador de mensagens
-      let whatsAppInteraction = {
-        botPhone: senderPhone,
-        userPhone: dataClient[j].receiverPhone,
-        botId: botId,
-        escalation: 0,
-        lastMessage: utils.dateToString(new Date(), "yyyy-MM-dd hh:mm:ss"),
-        session24hours: 1,
-      };
-
-      whatsAppInteraction = await whatsIn.create24hours(whatsAppInteraction);
-      console.log(whatsAppInteraction)
-      const sessionId = whatsAppInteraction.sessionId;
-
-      console.log(new Date(), `https://in.bot/api/bot_gateway?bot_id=${botId}&user_id=${dataClient[j].receiverPhone}&session_id=${sessionId}&bot_token=${dbInbot[0].botToken}&user_phrase=ATIVO_WHATSAPP ${templateId}&json=1&bot_server_type=${dbInbot[0].botServerType}&channel=whatsapp${dataValues}`);
-      console.log(new Date(), JSON.stringify(body_params));
-
-      try {
-        axios.get(`https://in.bot/api/bot_gateway?bot_id=${botId}&user_id=${dataClient[j].receiverPhone}&session_id=${sessionId}&bot_token=${dbInbot[0].botToken}&user_phrase=ATIVO_WHATSAPP ${templateId}&json=1&bot_server_type=${dbInbot[0].botServerType}&channel=whatsapp${dataValues}`)
-          .then(resp => console.log(resp.data))
-      } catch (error) {
-        console.log(error)
-      }
       let currentDate = new Date().toISOString();
       console.log("%s payload envio do template whats: %o", new Date(), body_params);
       axios
