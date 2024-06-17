@@ -109,7 +109,9 @@ const sendTemplate = async function (botId, templateId, senderPhone, dataClient,
      * botPhone, userPhone, botId, sessionId, escalation, lastMessage (date)
      */
     const lastMessage = util.dateToString(new Date(), "yyyy-MM-dd hh:mm:ss");
-    if(!customer || sessionExpired){
+    console.log(new Date(), `SessionExpired: ${sessionExpired}`)
+    console.log(new Date(), `Customer: ${customer}`)
+    if(customer.length===0 || !customer || sessionExpired){
         sessionId = util.sessionGenerator(32);
         const escalation = 0;
         await WhatsAppInteractionRepository.createNewSession(senderPhone, dataClient[j].receiverPhone, botId, sessionId, escalation, lastMessage, "")
