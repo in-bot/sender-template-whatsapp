@@ -92,9 +92,9 @@ const sendTemplate = async function (botId, templateId, senderPhone, dataClient,
 
       let currentDate = new Date().toISOString();
       console.log("%s payload envio do template whats: %o", new Date(), body_params);
-      axios
+      await axios
         .post(url, body_params, { headers: { Authorization: token } })
-        .then((res) => {
+        .then(async (res) => {
           console.log("%s response apos envio do template whats: %o", new Date(), res.data)
           if (campaignId) {
             let vSQL =
@@ -105,10 +105,10 @@ const sendTemplate = async function (botId, templateId, senderPhone, dataClient,
             "' AND phone='" +
             dataClient[j].receiverPhone +
             "'";
-            inbotDB.crud(vSQL)
+            await inbotDB.crud(vSQL)
           }
         })
-        .catch((err) => {
+        .catch(async (err) => {
           console.log("%s response ERROR apos envio do template whats: %o", new Date(), err.response.data)
           if (campaignId) {
             let vSQL =
@@ -119,7 +119,7 @@ const sendTemplate = async function (botId, templateId, senderPhone, dataClient,
             "' AND phone='" +
             dataClient[j].receiverPhone +
             "'";
-            inbotDB.crud(vSQL)
+            await inbotDB.crud(vSQL)
           }
         });
     } catch (error) {
@@ -134,7 +134,7 @@ const sendTemplate = async function (botId, templateId, senderPhone, dataClient,
         "' AND phone='" +
         dataClient[j].receiverPhone +
         "'";
-        inbotDB.crud(vSQL)
+        await inbotDB.crud(vSQL)
       }
     }
   }

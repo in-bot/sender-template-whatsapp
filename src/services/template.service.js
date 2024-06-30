@@ -123,20 +123,11 @@ const sendTemplate = async function (botId, templateId, senderPhone, dataClient,
         sessionId = customer.sessionId;
       }
 
-      console.log(new Date(), `https://in.bot/api/bot_gateway?bot_id=${botId}&user_id=${dataClient[j].receiverPhone}&session_id=${sessionId}&bot_token=${dbInbot[0].botToken}&user_phrase=ATIVO_WHATSAPP ${templateId}&json=1&bot_server_type=${dbInbot[0].botServerType}&channel=whatsapp${dataValues}`);
-      console.log(new Date(), JSON.stringify(body_params));
-
-      try {
-        axios.get(`https://in.bot/api/bot_gateway?bot_id=${botId}&user_id=${dataClient[j].receiverPhone}&session_id=${sessionId}&bot_token=${dbInbot[0].botToken}&user_phrase=ATIVO_WHATSAPP ${templateId}&json=1&bot_server_type=${dbInbot[0].botServerType}&channel=whatsapp${dataValues}`)
-          .then(resp => console.log(resp.data))
-      } catch (error) {
-            console.log(error)
-      }
       let currentDate = new Date().toISOString();
       console.log("%s payload envio do template whats: %o", new Date(), body_params);
-      axios
+      await axios
         .post(url, body_params, { headers: { Authorization: token } })
-        .then((res) => {
+        .then(async (res) => {
           console.log("%s response apos envio do template whats: %o", new Date(), res.data)
           if (campaignId) {
             let vSQL =
@@ -147,7 +138,17 @@ const sendTemplate = async function (botId, templateId, senderPhone, dataClient,
             "' AND phone='" +
             dataClient[j].receiverPhone +
             "'";
-            inbotDB.crud(vSQL)
+            await inbotDB.crud(vSQL)
+
+            console.log(new Date(), `https://in.bot/api/bot_gateway?bot_id=${botId}&user_id=${dataClient[j].receiverPhone}&session_id=${sessionId}&bot_token=${dbInbot[0].botToken}&user_phrase=ATIVO_WHATSAPP ${templateId}&json=1&bot_server_type=${dbInbot[0].botServerType}&channel=whatsapp${dataValues}`);
+            console.log(new Date(), JSON.stringify(body_params));
+      
+            try {
+              await axios.get(`https://in.bot/api/bot_gateway?bot_id=${botId}&user_id=${dataClient[j].receiverPhone}&session_id=${sessionId}&bot_token=${dbInbot[0].botToken}&user_phrase=ATIVO_WHATSAPP ${templateId}&json=1&bot_server_type=${dbInbot[0].botServerType}&channel=whatsapp${dataValues}`)
+                .then(resp => console.log(resp.data))
+            } catch (error) {
+                  console.log(error)
+            }
           }
         })
         .catch((err) => {
